@@ -36,6 +36,7 @@ boolean checkNum(String base) {
     
     if (isAlpha(currentChar) == true) {
       result = false;
+      break;
     }
     else {
       continue;
@@ -44,7 +45,36 @@ boolean checkNum(String base) {
   return result;
 }
 
-void pwm_manager() {
+void pwmManager(String inputString) {
+  // inputString format:
+  // leftPin, leftDir, rightPin, rightDir, upDownPin, upDownDir
+  // Stored in pwmValues Array
+  int pwmValues[6];
+  String temp;
+  int word = 0;
+  for (int i=0; i<inputString.length(); i++) {
+    char currentChar = inputString.charAt(i);
+    if (currentChar == ' ' || i == inputString.length()-1) {
+      if (i == inputString.length()-1) {
+        temp += currentChar;
+      }
+      pwmValues[word] = stoi(temp);
+      temp = "";
+      word++;
+      continue;
+    }
+    temp += currentChar;
+  }
+  
+//  int value = btInput.toInt();
+//        if (value >= 0 && value <= 255) {
+//          // Put value to the PWM pin
+//          Serial.print(value, DEC);
+//          analogWrite(leftPin, value);
+//        }
+//        else {
+//          Serial.write("Input value invalid.");
+//        }
   
 }
 
@@ -59,19 +89,13 @@ void loop() {
       btInput += character;
     }
     else {
-      // end of string
+      // end of string (character == '\n')
       if (checkNum(btInput) == true) {
         // if the input string is number
-        int value = btInput.toInt();
-        if (value >= 0 && value <= 255) {
-          // Put value to the PWM pin
-          Serial.print(value, DEC);
-          analogWrite(leftPin, value);
-        }
-        else {
-          Serial.write("Input value invalid.");
-        }
-        
+        pwmManager(btInput);
+      }
+      else {
+        Serial.write("Input invalid.");
       }
       
       btInput = ""; // clear input
