@@ -6,10 +6,10 @@ char character;
 String btInput = "";
 
 // PWM: 3, 5, 6, 9, 10, and 11
-int leftDir = 2;
 int leftPin = 3;
-int rightDir = 4;
+int leftDir = 2;
 int rightPin = 5;
+int rightDir = 4;
 int upDownPin = 6;
 int upDownDir = 7;
 
@@ -58,24 +58,27 @@ void pwmManager(String inputString) {
       if (i == inputString.length()-1) {
         temp += currentChar;
       }
-      pwmValues[word] = stoi(temp);
+      pwmValues[word] = temp.toInt();
       temp = "";
       word++;
       continue;
     }
     temp += currentChar;
   }
-  
-//  int value = btInput.toInt();
-//        if (value >= 0 && value <= 255) {
-//          // Put value to the PWM pin
-//          Serial.print(value, DEC);
-//          analogWrite(leftPin, value);
-//        }
-//        else {
-//          Serial.write("Input value invalid.");
-//        }
-  
+
+  if ((pwmValues[0] >= 0 && pwmValues[0] <= 255) &&
+      (pwmValues[2] >= 0 && pwmValues[2] <= 255) &&
+      (pwmValues[4] >= 0 && pwmValues[4] <= 255)) {
+    analogWrite(leftPin, pwmValues[0]);
+    digitalWrite(leftDir, pwmValues[1]);
+    analogWrite(rightPin, pwmValues[2]);
+    digitalWrite(rightDir, pwmValues[3]);
+    analogWrite(upDownPin, pwmValues[4]);
+    digitalWrite(upDownDir, pwmValues[5]);
+  }
+  else {
+    Serial.write("Input numbers out of range");
+  }
 }
 
 void loop() {
@@ -91,22 +94,20 @@ void loop() {
     else {
       // end of string (character == '\n')
       if (checkNum(btInput) == true) {
-        // if the input string is number
+        // if the whole input string is number
         pwmManager(btInput);
       }
       else {
-        Serial.write("Input invalid.");
+        // Not number
+        BT_Serial.write(character);
       }
-      
       btInput = ""; // clear input
     }
-    
   }
 
   // read response from Bluetooth Module, then display it on Terminals
   while (BT_Serial.available() > 0) {
     character = BT_Serial.read();
     Serial.write(character);
-    
   }
 }
