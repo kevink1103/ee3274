@@ -81,10 +81,10 @@ void pwmManager(String inputString) {
     analogWrite(upDownPin, pwmValues[4]);
     digitalWrite(upDownDir, pwmValues[5]);
     Serial.print(inputString);
-    Serial.write(" APPLIED");
+    Serial.println(" APPLIED");
   }
   else {
-    Serial.write("Input numbers out of range");
+    Serial.println("Input numbers out of range");
   }
 }
 
