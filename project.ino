@@ -47,8 +47,9 @@ boolean checkNum(String base) {
 
 void pwmManager(String inputString) {
   // inputString format:
-  // leftPin, leftDir, rightPin, rightDir, upDownPin, upDownDir
-  // Stored in pwmValues Array
+  // "leftPin leftDir rightPin rightDir upDownPin upDownDir"
+
+  // Store values in int to pwmValues Array
   int pwmValues[6];
   String temp;
   int word = 0;
@@ -66,15 +67,21 @@ void pwmManager(String inputString) {
     temp += currentChar;
   }
 
+  // Set values to pins accordingly
   if ((pwmValues[0] >= 0 && pwmValues[0] <= 255) &&
+      (pwmValues[1] >= 0 && pwmValues[1] <= 1) &&
       (pwmValues[2] >= 0 && pwmValues[2] <= 255) &&
-      (pwmValues[4] >= 0 && pwmValues[4] <= 255)) {
+      (pwmValues[3] >= 0 && pwmValues[3] <= 1) &&
+      (pwmValues[4] >= 0 && pwmValues[4] <= 255) &&
+      (pwmValues[5] >= 0 && pwmValues[5] <= 1)) {
     analogWrite(leftPin, pwmValues[0]);
     digitalWrite(leftDir, pwmValues[1]);
     analogWrite(rightPin, pwmValues[2]);
     digitalWrite(rightDir, pwmValues[3]);
     analogWrite(upDownPin, pwmValues[4]);
     digitalWrite(upDownDir, pwmValues[5]);
+    Serial.print(inputString);
+    Serial.write(" APPLIED");
   }
   else {
     Serial.write("Input numbers out of range");
