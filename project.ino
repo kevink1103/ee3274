@@ -1,7 +1,3 @@
-#include <SoftwareSerial.h>
-
-SoftwareSerial BT_Serial(10, 11); // RX|TX
-
 char character;
 String btInput = "";
 
@@ -16,7 +12,6 @@ int upDownDir = 7;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600); // set baud rate for Serial communication (between Arduino and Terminal)
-  BT_Serial.begin(9600); // set baud rate for BT_Serial communication (between Arduino and Bluetooth Module)
   
   pinMode(leftPin, OUTPUT);
   pinMode(rightPin, OUTPUT);
@@ -95,7 +90,6 @@ void loop() {
     character = Serial.read();
 
     if (character != '\n') {
-      BT_Serial.write(character);
       btInput += character;
     }
     else {
@@ -106,15 +100,8 @@ void loop() {
       }
       else {
         // Not number
-        BT_Serial.write(character);
       }
       btInput = ""; // clear input
     }
-  }
-
-  // read response from Bluetooth Module, then display it on Terminals
-  while (BT_Serial.available() > 0) {
-    character = BT_Serial.read();
-    Serial.write(character);
   }
 }
