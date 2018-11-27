@@ -28,7 +28,7 @@ void setup() {
   while(!Serial); // wait until serial port is ready
 }
 
-boolean checkNum(String base) {
+boolean isAllNumber(String base) {
   // Check if the whole string is composed of numbers
   boolean result = true;
   for (int i=0; i<base.length(); i++) {
@@ -104,7 +104,7 @@ void loop() {
       btInput += character;
     }
     else {
-      if (checkNum(btInput) == true) {
+      if (isAllNumber(btInput) == true) {
         setPWMValues(btInput);
       }
       btInput = ""; // clear input
@@ -122,7 +122,7 @@ void loop() {
 //      btInput += character;
 //    }
 //    else {
-//      if (checkNum(btInput) == true) {
+//      if (isAllNumber(btInput) == true) {
 //        Serial.println("BTSerial Put");
 //        setPWMValues(btInput);
 //      }
