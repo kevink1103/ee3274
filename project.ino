@@ -1,17 +1,17 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial BT_Serial(10, 11); // RX|TX
+SoftwareSerial BT_Serial(0, 1); // RX|TX 7 8
 
 char character;
 String btInput = "";
 
 // PWM: 3, 5, 6, 9, 10, and 11
-int leftPin = 3;
-int leftDir = 2;
-int rightPin = 5;
-int rightDir = 4;
-int upDownPin = 6;
-int upDownDir = 7;
+int leftPin = 5;
+int leftDir = 6;
+int rightPin = 9;
+int rightDir = 10;
+int upDownPin = 11;
+int upDownDir = 12;
 int pwmValues[6];
 
 void setup() {
@@ -25,7 +25,7 @@ void setup() {
   pinMode(rightDir, OUTPUT);
   pinMode(upDownDir, OUTPUT);
 
-  while(!Serial);// wait until serial port is ready
+  while(!Serial); // wait until serial port is ready
 }
 
 boolean checkNum(String base) {
@@ -47,7 +47,7 @@ boolean checkNum(String base) {
 
 void setPWMValues(String inputString) {
   // inputString format:
-  // "leftPin leftDir rightPin rightDir upDownPin upDownDir"
+  // "leftPin leftDir rightPin rightDir upDownPin upDownDir#"
 
   // Store values in int to pwmValues Array
   String temp;
@@ -85,7 +85,7 @@ void pwmManager() {
     digitalWrite(upDownDir, pwmValues[5]);
   }
   else {
-    Serial.println("Input numbers out of range");
+    Serial.println("smth wrong");
   }
 }
 
@@ -98,30 +98,8 @@ void loop() {
   // read AT command from Terminal, then write it to Bluetooth Module
   while (Serial.available() > 0) {
     character = Serial.read();
-
-    if (character != '\n') {
-      Serial.write(character);
-      BT_Serial.write(character);
-      btInput += character;
-    }
-    else {
-      // end of string (character == '\n')
-      if (checkNum(btInput) == true) {
-        // if the whole input string is number
-        setPWMValues(btInput);
-      }
-      else {
-        Serial.write(character);
-        BT_Serial.write(character);
-      }
-      btInput = ""; // clear input
-    }
-  }
-
-  // read response from Bluetooth Module, then display it on Terminals
-  while (BT_Serial.available() > 0) {
-    character = BT_Serial.read();
     
+    // every command ends with '#'
     if (character != '#') {
       btInput += character;
     }
@@ -132,5 +110,23 @@ void loop() {
       btInput = ""; // clear input
     }
   }
-  
+
+  // read response from Bluetooth Module, then display it on Terminals
+  while (BT_Serial.available() > 0) {
+    character = BT_Serial.read();
+//    Nothing happens to BT_Serial
+//    When connected with Pin 0,1
+//    Serial.println("BTSerial Put");
+
+//    if (character != '#') {
+//      btInput += character;
+//    }
+//    else {
+//      if (checkNum(btInput) == true) {
+//        Serial.println("BTSerial Put");
+//        setPWMValues(btInput);
+//      }
+//      btInput = ""; // clear input
+//    }
+  }
 }
