@@ -1,4 +1,4 @@
-# ee3274
+# EE3274 Group 3
 Airship Project for EE3274.
 
 ## project.ino
