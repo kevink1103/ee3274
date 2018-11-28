@@ -114,19 +114,7 @@ void loop() {
   // read response from Bluetooth Module, then display it on Terminals
   while (BT_Serial.available() > 0) {
     character = BT_Serial.read();
-//    Nothing happens to BT_Serial
-//    When connected with Pin 0,1
-//    Serial.println("BTSerial Put");
-
-//    if (character != '#') {
-//      btInput += character;
-//    }
-//    else {
-//      if (isAllNumber(btInput) == true) {
-//        Serial.println("BTSerial Put");
-//        setPWMValues(btInput);
-//      }
-//      btInput = ""; // clear input
-//    }
+    // Nothing should happen here
+    // When connected with Pin 0,1
   }
 }
