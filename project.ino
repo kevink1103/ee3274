@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial BT_Serial(0, 1); // RX|TX 7 8
+SoftwareSerial BluetoothSerial(0, 1); // RX|TX 7 8
 
 char character;
 String btInput = "";
@@ -16,7 +16,7 @@ int pwmValues[6];
 
 void setup() {
   Serial.begin(9600);
-  BT_Serial.begin(9600);
+  BluetoothSerial.begin(9600);
   
   pinMode(leftPin, OUTPUT);
   pinMode(rightPin, OUTPUT);
@@ -112,8 +112,8 @@ void loop() {
   }
 
   // read response from Bluetooth Module, then display it on Terminals
-  while (BT_Serial.available() > 0) {
-    character = BT_Serial.read();
+  while (BluetoothSerial.available() > 0) {
+    character = BluetoothSerial.read();
     // Nothing should happen here
     // When connected with Pin 0,1
   }
