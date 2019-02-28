@@ -9,6 +9,7 @@ void localInstreamHandler() {
     else {
       if (isAllNumbers(localIncomingString) == true) {
         ship->setPWMValues(localIncomingString);
+        Serial.println(localIncomingString);
       }
       localIncomingString = ""; // clear input
     }
@@ -30,6 +31,11 @@ void scannerInstreamHandler() {
       flag = true;
       continue;
     }
+    else if (scannerIncoming == 'U' || scannerIncoming == 'R') {
+      block = "";
+      flag = false;
+      continue;
+    }
     else if (scannerIncoming == '	' || scannerIncoming == '\n') {
       if (block.length() == 12) {
         mac = block;
@@ -39,14 +45,7 @@ void scannerInstreamHandler() {
       }
       if (mac.length() == 12 && rssi.length() > 0) {
         // Do something like add a device here with mac and rssi
-        // Serial.println(mac);
-        // Serial.println(rssi);
-        device *ibeacon = new device();
-        ibeacon->setMAC(mac);
-        ibeacon->setRSSI(rssi.toInt());
-        Serial.println(ibeacon->getMAC());
-        Serial.println(ibeacon->getRSSI());
-        delete ibeacon;
+        updateDevice(mac, rssi);
       }
       block = "";
       flag = false;
