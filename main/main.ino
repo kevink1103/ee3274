@@ -1,16 +1,28 @@
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
-#include "classes/pins.cpp"
-#include "classes/macs.cpp"
+#include "library/pid.h"
 #include "classes/airship.cpp"
-#include "classes/device.cpp"
+#include "classes/pole.cpp"
 #include "utilities/textManager.cpp"
 
-SoftwareSerial BluetoothSerial(0, 1);
-SoftwareSerial ScannerSerial(18, 19); // RX|TX A4|A5
+#define MAC1 "3CA5080A9A05"
 
-airship *ship = new airship();
-device poles[7];
+#define leftPWM 5
+#define leftDir 6
+#define rightPWM 9
+#define rightDir 10
+#define upDownPWM 11
+#define upDownDir 12
+#define BtRx 0
+#define BtTx 1
+#define ScannerRx 18 // A4
+#define ScannerTx 19 // A5
+
+SoftwareSerial BluetoothSerial(BtRx, BtTx);
+SoftwareSerial ScannerSerial(ScannerRx, ScannerTx); // RX|TX A4|A5
+
+airship ship;
+pole poles[7];
 
 char scannerIncoming;
 char localIncoming;
@@ -21,27 +33,21 @@ void setup() {
   BluetoothSerial.begin(115200);
   ScannerSerial.begin(115200);
 
-  pinMode(PINS::leftPWM, OUTPUT);
-  pinMode(PINS::rightPWM, OUTPUT);
-  pinMode(PINS::upDownPWM, OUTPUT);
-  pinMode(PINS::leftDirection, OUTPUT);
-  pinMode(PINS::rightDirection, OUTPUT);
-  pinMode(PINS::upDownDirection, OUTPUT);
+  pinMode(leftPWM, OUTPUT);
+  pinMode(rightPWM, OUTPUT);
+  pinMode(upDownPWM, OUTPUT);
+  pinMode(leftDir, OUTPUT);
+  pinMode(rightDir, OUTPUT);
+  pinMode(upDownDir, OUTPUT);
 
-  MACS mac_list;
-  poles[0].setMAC(mac_list.PA);
-  poles[1].setMAC(mac_list.PB);
-  poles[2].setMAC(mac_list.PC);
-  poles[3].setMAC(mac_list.PD);
-  poles[4].setMAC(mac_list.PE);
-  poles[5].setMAC(mac_list.PF);
-  poles[6].setMAC(mac_list.PG);
+  ship.setPins(leftPWM, leftDir, rightPWM, rightDir, upDownPWM, upDownDir);
+  poles[0].setMAC(MAC1);
 
-  while(!Serial); // Wait until serial port is ready
+  // while(!Serial); // Wait until serial port is ready
 }
 
 void loop() {
-  ship->pwmManager();
   localInstreamHandler();
   scannerInstreamHandler();
+  ship.pwmManager();
 }

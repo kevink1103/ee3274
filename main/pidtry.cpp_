@@ -1,0 +1,24 @@
+#include <iostream>
+#include "library/pid.h"
+
+int main() {
+  std::cout << "Hello World!" << std::endl;
+
+  EEProj::Pid<1> height_pid(0.99, 3, 0, LOCATION);
+  EEProj::Pid<1> horizon_pid(0.99, 3, 0, LOCATION);
+  EEProj::Vector<1> output;
+
+  double target = 1000;
+  double input_Sensor = 500;
+  double error = target - input_Sensor;
+  height_pid.newInput(error, 1000);
+
+  output = height_pid.get_pid();
+
+  std::cout << output.x() << std::endl;
+  // std::cout << output.y() << std::endl;
+  // std::cout << output.z() << std::endl;
+
+  return 0;
+}
+

@@ -8,7 +8,7 @@ void localInstreamHandler() {
     }
     else {
       if (isAllNumbers(localIncomingString) == true) {
-        ship->setPWMValues(localIncomingString);
+        ship.setPWMValues(localIncomingString);
         Serial.println(localIncomingString);
       }
       localIncomingString = ""; // clear input
@@ -25,7 +25,8 @@ void scannerInstreamHandler() {
   bool flag = false;
   while (ScannerSerial.available() > 0) {
     scannerIncoming = ScannerSerial.read();
-
+    // Serial.write(scannerIncoming);
+    
     if (scannerIncoming == ':') {
       block = "";
       flag = true;
@@ -45,7 +46,12 @@ void scannerInstreamHandler() {
       }
       if (mac.length() == 12 && rssi.length() > 0) {
         // Do something like add a device here with mac and rssi
-        updateDevice(mac, rssi);
+        int result = updatePole(mac, rssi);
+        if (result != -1) { // Only calculate Pid when there is update
+          calculatePid();
+        }
+        mac = "";
+        rssi = "";
       }
       block = "";
       flag = false;

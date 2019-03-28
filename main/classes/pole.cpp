@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-class device {
+class pole {
 private:
   String mac = "";
   int rssi = 0;
