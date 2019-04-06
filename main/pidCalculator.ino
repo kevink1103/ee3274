@@ -1,7 +1,7 @@
-EEProj::Pid<1> horizon_pid(0.99, 3, 0, INCREMENT);
+EEProj::Pid<1> horizon_pid(0.99, 3, 1, INCREMENT);
 EEProj::Vector<1> output;
 unsigned long lasttime = micros();
-double goal = 35; // goal RSSI to maintain
+double goal = 40; // goal RSSI to maintain
 
 // Consider anti-clockwise now
 void calculatePid() {
@@ -27,13 +27,16 @@ void calculatePid() {
   //   leftThrust = rightThrust * 0.8;
   // }
 
-  if (thrust >= -70 && thrust <= 0) {
-    leftThrust = thrust * -1 * 1.5;
-    rightThrust = thrust;
+  Serial.println("ORIGINAL THRUST");
+  Serial.println(thrust);
+
+  if (thrust >= -70 && thrust < 0) {
+    leftThrust = thrust * -1 * 1.4;
+    rightThrust = thrust * 0.7;
   }
   else if (thrust >= 0 && thrust <= 70) {
-    rightThrust = thrust * 1.5;
-    leftThrust = thrust;
+    rightThrust = thrust * 1.4;
+    leftThrust = thrust * 0.7;
   }
   else {
     leftThrust = 0;
@@ -41,13 +44,12 @@ void calculatePid() {
   }
 
   if (error == 0) {
-    leftThrust = 30;
-    rightThrust = 70;
+    leftThrust = 20;
+    rightThrust = 50;
   }
   
   ship.setLeftThrust(leftThrust);
   ship.setRightThrust(rightThrust);
-  ship.setUpDownThrust(0);
 
   Serial.println(error);
   Serial.println(output.x());

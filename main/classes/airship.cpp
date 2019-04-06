@@ -4,8 +4,8 @@
 #define leftBackward 0;
 #define rightForward 0;
 #define rightBackward 1;
-#define upDownUp 1;
-#define upDownDown 0;
+#define upDownUp 0;
+#define upDownDown 1;
 
 class airship {
 private:
@@ -47,36 +47,59 @@ public:
   }
 
   void setLeftThrust(int signal) {
-    if (signal >= 0 && signal <= 255) {
-      pwmValues[0] = signal;
+    int adjSignal = adjustSignalRange(signal);
+    if (adjSignal >= 0 && adjSignal <= 255) {
+      pwmValues[0] = adjSignal;
       pwmValues[1] = leftForward;
     }
-    else if (signal < 0 && signal >= -255) {
-      pwmValues[0] = signal*-1;
+    else if (adjSignal < 0 && adjSignal >= -255) {
+      pwmValues[0] = adjSignal*-1;
       pwmValues[1] = leftBackward;
     }
   }
 
   void setRightThrust(int signal) {
-    if (signal >= 0 && signal <= 255) {
-      pwmValues[2] = signal;
+    int adjSignal = adjustSignalRange(signal);
+    if (adjSignal >= 0 && adjSignal <= 255) {
+      pwmValues[2] = adjSignal;
       pwmValues[3] = rightForward;
     }
-    else if (signal < 0 && signal >= -255) {
-      pwmValues[2] = signal*-1;
+    else if (adjSignal < 0 && adjSignal >= -255) {
+      pwmValues[2] = adjSignal*-1;
       pwmValues[3] = rightBackward;
     }
   }
 
   void setUpDownThrust(int signal) {
-    if (signal >= 0 && signal <= 255) {
-      pwmValues[4] = signal;
+    int adjSignal = adjustSignalRange(signal);
+    if (adjSignal >= 0 && adjSignal <= 255) {
+      pwmValues[4] = adjSignal;
       pwmValues[5] = upDownUp;
     }
-    else if (signal < 0 && signal >= -255) {
-      pwmValues[4] = signal*-1;
+    else if (adjSignal < 0 && adjSignal >= -255) {
+      pwmValues[4] = adjSignal*-1;
       pwmValues[5] = upDownDown;
     }
+  }
+
+  int adjustSignalRange(int signal) {
+    if (signal > 255) {
+      return 255;
+    }
+    else if (signal < -255) {
+      return -255;
+    }
+    else {
+      return signal;
+    }
+  }
+
+  int getUpDownVal() {
+    return pwmValues[4];
+  }
+
+  int getUpDownDir() {
+    return pwmValues[5];
   }
 
   void pwmManager() {

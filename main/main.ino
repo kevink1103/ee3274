@@ -1,11 +1,13 @@
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
+#include <Wire.h>
 #include "library/pid.h"
 #include "classes/airship.cpp"
 #include "classes/pole.cpp"
 #include "utilities/textManager.cpp"
 
-#define MAC1 "3CA5080A9A05"
+// #define MAC1 "3CA5080A9A05"
+#define MAC1 "3CA5080A9A09"
 
 #define leftPWM 5
 #define leftDir 6
@@ -17,9 +19,12 @@
 #define BtTx 1
 #define ScannerRx 18 // A4
 #define ScannerTx 19 // A5
+#define UltRx 15
+#define UltTx 14
 
 SoftwareSerial BluetoothSerial(BtRx, BtTx);
 SoftwareSerial ScannerSerial(ScannerRx, ScannerTx); // RX|TX A4|A5
+SoftwareSerial UltSerial(UltRx, UltTx);
 
 airship ship;
 pole poles[7];
@@ -27,11 +32,13 @@ pole poles[7];
 char scannerIncoming;
 char localIncoming;
 String localIncomingString;
+char ultIncoming;
+String ultIncomingString;
 
 void setup() {
   Serial.begin(115200);
-  BluetoothSerial.begin(115200);
   ScannerSerial.begin(115200);
+  UltSerial.begin(9600);
 
   pinMode(leftPWM, OUTPUT);
   pinMode(rightPWM, OUTPUT);
@@ -48,6 +55,10 @@ void setup() {
 
 void loop() {
   localInstreamHandler();
-  scannerInstreamHandler();
+  ship.setLeftThrust(35);
+  ship.setRightThrust(65);
+  // scannerInstreamHandler();
+  ultInstreamHandler();
+
   ship.pwmManager();
 }
