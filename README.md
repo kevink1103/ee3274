@@ -1,8 +1,8 @@
 # EE3274 Group 3
 Airship Project for EE3274.
 
-## project.ino
-Arduino source code file.
+## main
+Contains all sketch files and CPP files
 ## GroupThree.aia
 Thunkable (https://thunkable.com/) Classic app project file.
 ## GroupThree.apk
