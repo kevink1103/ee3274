@@ -35,6 +35,9 @@ String localIncomingString;
 char ultIncoming;
 String ultIncomingString;
 
+long lastTime;
+bool thrust;
+
 void setup() {
   Serial.begin(115200);
   ScannerSerial.begin(115200);
@@ -50,13 +53,39 @@ void setup() {
   ship.setPins(leftPWM, leftDir, rightPWM, rightDir, upDownPWM, upDownDir);
   poles[0].setMAC(MAC1);
 
+  lastTime = micros();
+  thrust = true;
+
   // while(!Serial); // Wait until serial port is ready
 }
 
 void loop() {
   localInstreamHandler();
-  ship.setLeftThrust(35);
-  ship.setRightThrust(65);
+
+  long diff = micros() - lastTime;
+  long hold = 0;
+
+  if (thrust) {
+    hold = 1000000;
+  }
+  else {
+    hold = 500000;
+  }
+
+  if (diff >= hold) { // after 1 seconds = 1000000
+    thrust = !thrust;
+    lastTime = micros();
+  }
+
+  if (thrust) {
+    ship.setLeftThrust(30);
+    ship.setRightThrust(80);
+  }
+  else {
+    ship.setLeftThrust(25);
+    ship.setRightThrust(25);
+  }
+  
   // scannerInstreamHandler();
   ultInstreamHandler();
 
