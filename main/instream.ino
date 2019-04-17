@@ -17,53 +17,53 @@ void localInstreamHandler() {
   }
 }
 
-// void scannerInstreamHandler() {
-//   String block = "";
-//   String mac = "";
-//   String rssi = "";
-//   bool flag = false;
+void scannerInstreamHandler() {
+  String block = "";
+  String mac = "";
+  String rssi = "";
+  bool flag = false;
   
-//   while (ScannerSerial.available() > 0) {
-//     scannerIncoming = ScannerSerial.read();
-//     Serial.write(scannerIncoming);
+  while (ScannerSerial.available() > 0) {
+    scannerIncoming = ScannerSerial.read();
+    Serial.write(scannerIncoming);
     
-//     if (scannerIncoming == ':') {
-//       block = "";
-//       flag = true;
-//       continue;
-//     }
-//     else if (scannerIncoming == 'U' || scannerIncoming == 'R') {
-//       block = "";
-//       flag = false;
-//       continue;
-//     }
-//     else if (scannerIncoming == '	' || scannerIncoming == '\n') {
-//       if (block.length() == 12) {
-//         mac = block;
-//       }
-//       else if (block.charAt(0) == '-') {
-//         rssi = block;
-//       }
-//       if (mac.length() == 12 && rssi.length() > 0) {
-//         Serial.println(mac);
-//         // Do something like add a device here with mac and rssi
-//         int result = updatePole(mac, rssi);
-//         if (result != -1) { // Only calculate Pid when there is update
-//           calculatePid();
-//         }
-//         mac = "";
-//         rssi = "";
-//       }
-//       block = "";
-//       flag = false;
-//       continue;
-//     }
-//     if (flag) {
-//       block += scannerIncoming;
-//     }
+    if (scannerIncoming == ':') {
+      block = "";
+      flag = true;
+      continue;
+    }
+    else if (scannerIncoming == 'U' || scannerIncoming == 'R') {
+      block = "";
+      flag = false;
+      continue;
+    }
+    else if (scannerIncoming == '	' || scannerIncoming == '\n') {
+      if (block.length() == 12) {
+        mac = block;
+      }
+      else if (block.charAt(0) == '-') {
+        rssi = block;
+      }
+      if (mac.length() == 12 && rssi.length() > 0) {
+        Serial.println(mac);
+        // Do something like add a device here with mac and rssi
+        int result = updatePole(mac, rssi);
+        if (result != -1) { // Only calculate Pid when there is update
+          calculatePid();
+        }
+        mac = "";
+        rssi = "";
+      }
+      block = "";
+      flag = false;
+      continue;
+    }
+    if (flag) {
+      block += scannerIncoming;
+    }
 
-//   }
-// }
+  }
+}
 
 void ultInstreamHandler() {
   UltSerial.listen();

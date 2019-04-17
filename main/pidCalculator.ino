@@ -1,9 +1,9 @@
 EEProj::Pid<1> horizon_pid(0.99, 3, 1, INCREMENT);
 EEProj::Vector<1> output;
 unsigned long lasttime = micros();
-double goal = 40; // goal RSSI to maintain
+double goal = 50; // goal RSSI to maintain
 
-// Consider anti-clockwise now
+// Consider anti-clockwise
 void calculatePid() {
   double newRSSI = (double)poles[0].getRSSI();
   double error = newRSSI - goal; // if neg, too close, if pos, too far
@@ -17,18 +17,6 @@ void calculatePid() {
   int thrust = output.x();
   int leftThrust;
   int rightThrust;
-
-  // if (error <= 0) {
-  //   leftThrust = thrust * 0.3 * -1;
-  //   rightThrust = leftThrust * 0.8;
-  // }
-  // else if (error >= 0) {
-  //   rightThrust = thrust * 0.3;
-  //   leftThrust = rightThrust * 0.8;
-  // }
-
-  Serial.println("ORIGINAL THRUST");
-  Serial.println(thrust);
 
   if (thrust >= -70 && thrust < 0) {
     leftThrust = thrust * -1 * 1.4;
